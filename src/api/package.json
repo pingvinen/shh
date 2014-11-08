@@ -1,0 +1,10 @@
+{
+	  "name": "ssh-api"
+	, "description": "Web API for Shh"
+	, "version": "0.0.1"
+	, "private": true
+	, "dependencies": {
+		  "express": "~4.0.0"
+		, "debug": "~0.7.4"
+	}
+}

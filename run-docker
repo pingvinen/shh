@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+API_PORT=3000
+API_DIR=$(pwd)/src/api
+
+docker run -i -t --rm \
+	-p $API_PORT:$API_PORT \
+	-v $API_DIR:/src \
+	--name="shh-api" \
+	-e HTTP_PORT=$API_PORT \
+	pingvinen/shh-api:0.1
+

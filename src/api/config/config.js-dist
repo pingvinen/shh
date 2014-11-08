@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+var Config = require('./../lib/Config.js');
+var config = new Config();
+
+// set stuff on the config instance
+
+module.exports = config;
+
