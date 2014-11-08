@@ -5,6 +5,7 @@ module.exports = function(req, res) {
 	"use strict";
 	res.json({
 		"message": new Date()
+		, "env": process.env
 	});
 };
 

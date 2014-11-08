@@ -3,10 +3,26 @@
 API_PORT=3000
 API_DIR=$(pwd)/src/api
 
+
+echo ""
+echo "Starting the MongoDB container"
+echo "------------------------------------------------"
+docker run -d \
+	--name="shh-mongo" \
+	-p 27017:27017 \
+	dockerfile/mongodb
+
+
+
+echo ""
+echo "Starting the API container"
+echo "------------------------------------------------"
 docker run -i -t --rm \
 	-p $API_PORT:$API_PORT \
 	-v $API_DIR:/src \
 	--name="shh-api" \
+	--link shh-mongo:shh-mongo \
 	-e HTTP_PORT=$API_PORT \
+	-e MONGO_HOST="shh-mongo" \
 	pingvinen/shh-api:0.1
 
