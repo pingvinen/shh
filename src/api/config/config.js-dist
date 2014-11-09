@@ -2,7 +2,8 @@
 var Config = require('./../lib/Config.js');
 var config = new Config();
 
-// set stuff on the config instance
+config.mongoDatabaseName = 'shh';
+config.sessionSecret = '*** set this to something ***';
 
 module.exports = config;
 

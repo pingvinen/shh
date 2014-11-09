@@ -4,6 +4,7 @@ function Config() {
 	"use strict";
 
 	this.mongoDatabaseName = 'shh';
+	this.sessionSecret = 'forYourEyesOnlyMrPresident';
 }
 
 Config.prototype.getMongoHost = function() {
@@ -16,6 +17,10 @@ Config.prototype.getMongoPort = function() {
 
 Config.prototype.getMongoDatabaseName = function() {
 	return this.mongoDatabaseName;
+};
+
+Config.prototype.getSessionSecret = function() {
+	return this.sessionSecret;
 };
 
 module.exports = Config;

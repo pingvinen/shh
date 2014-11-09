@@ -62,12 +62,27 @@ MongoConnection.prototype.find = function(db, collectionName, searchDocument, ca
 
 	var collection = db.collection(collectionName);
 
-	collection.find({}).toArray(function(err, docs) {
+	collection.find(searchDocument).toArray(function(err, docs) {
 		if (err != null) {
 			console.log('Find error', err);
 		}
 		else {
 			callback(docs);
+		}
+	});
+};
+
+MongoConnection.prototype.remove = function(db, collectionName, searchDocument, callback) {
+	"use strict";
+
+	var collection = db.collection(collectionName);
+
+	collection.removeMany(searchDocument, function(err, result) {
+		if (err != null) {
+			console.log('Remove error', err);
+		}
+		else {
+			callback(db);
 		}
 	});
 };

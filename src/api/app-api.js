@@ -3,6 +3,9 @@
 var debug = require('debug')('ssh-api');
 var path = require('path');
 var express = require('express');
+var bodyParser = require('body-parser');
+var session = require('express-session');
+var uuid = require('node-uuid');
 var app = express();
 var config = require('./config/config.js');
 
@@ -10,9 +13,28 @@ app.set('x-powered-by', false);
 
 var routes = require('./routes');
 
+// parse request body as json
+app.use(bodyParser.json());
+
+app.use(session({
+	  secret: config.getSessionSecret()
+	, genid: function(req) {
+		return uuid();
+	}
+
+	  // http://stackoverflow.com/questions/24477035/express-4-0-express-session-with-odd-warning-message
+	, saveUninitialized: true
+	, resave: true
+}));
+
 app.use(function(req, res, next) {
 	"use strict";
-	console.log(req.method, req.url, req.headers);
+	console.log(req.method, req.url);
+	console.log('#### headers ####');
+	console.log(req.headers);
+	console.log('#### body ####');
+	console.log(req.body);
+	console.log('#### /body ####');
 	next();
 });
 
@@ -41,6 +63,8 @@ app.use(function(err, req, res, next) {
 		error: {}
 	});
 });
+
+
 
 app.use(routes);
 
