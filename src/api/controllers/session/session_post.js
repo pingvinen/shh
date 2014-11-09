@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-var config = require('./../config/config');
-var MongoConnection = require('./../lib/MongoConnection');
-var AuthenticationService = require('./../lib/authentication/AuthenticationService');
+var config = require('./../../config/config');
+var MongoConnection = require('./../../lib/MongoConnection');
+var AuthenticationService = require('./../../lib/authentication/AuthenticationService');
 
 var getExpiresAt = function() {
 	var now = (new Date()).getTime();

@@ -6,7 +6,7 @@ var checksumService = require('./../../lib/authentication/ChecksumService');
 var callAuthenticate = function(next) {
 	var options = {
 		  host: 'api.shh.local'
-		, path: '/authenticate'
+		, path: '/session'
 		, method: 'POST'
 		, headers: {
 			'Content-Type': 'application/json'
@@ -30,7 +30,13 @@ var callAuthenticate = function(next) {
 
 				var cookies = response.headers['set-cookie'] || [];
 
-				next(cookies, JSON.parse(str));
+				var result = JSON.parse(str);
+
+				if (result.error) {
+					throw new Error(result.error.message, result.error.code);
+				}
+
+				next(cookies, result);
 			});
 
 	});
@@ -48,8 +54,8 @@ var callLogout = function(cookies, authenticateResponse) {
 
 	var options = {
 		  host: 'api.shh.local'
-		, path: '/logout'
-		, method: 'POST'
+		, path: '/session'
+		, method: 'DELETE'
 		, headers: {
 			  'Content-Type': 'application/json'
 			, Cookie: cookies
@@ -57,7 +63,7 @@ var callLogout = function(cookies, authenticateResponse) {
 	};
 
 	var body = {
-		checksum: checksumService.calculate(authenticateResponse.token, ['/logout'])
+		checksum: checksumService.calculate(authenticateResponse.token, ['/session'])
 	};
 
 	var req = http.request(options, function callback(response) {
@@ -69,6 +75,12 @@ var callLogout = function(cookies, authenticateResponse) {
 
 		response.on('end', function onEnd() {
 			console.log(str);
+
+			var result = JSON.parse(str);
+
+			if (result.error) {
+				throw new Error(result.error.message, result.error.code);
+			}
 		});
 
 	});

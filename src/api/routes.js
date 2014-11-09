@@ -6,8 +6,8 @@ var config = require('./config/config');
 
 router.get('/', require('./controllers/index'));
 router.get('/mongotest', require('./controllers/mongotest'));
-router.post('/authenticate', require('./controllers/authenticate'));
-router.post('/logout', require('./controllers/logout'));
+router.post('/session', require('./controllers/session/session_post'));
+router.delete('/session', require('./controllers/session/session_delete'));
 
 module.exports = router;
 

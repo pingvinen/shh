@@ -7,14 +7,17 @@ The API uses JSON as the transport format for both requests and responses.
 Authentication
 --------------
 
-`/authenticate`
+`POST /session`
 
 Before doing any other requests against the API, one must first go through authentication, 
 which (at the moment) is a simple username/password challenge. This will generate a token that must
 be used to calculate a checksum for all subsequent requests in the session.
 
+Note that the session ID is carried via the cookie header, so make sure to send the cookies along with
+each request.
+
 ```
-POST /authenticate
+POST /session
 {
 	  "username": "<username>"
 	, "password": "***"
@@ -45,12 +48,12 @@ In case of invalid credentials...
 Logging out
 -----------
 
-`/logout`
+`DELETE /session`
 
 Logging out basically means "kill this token".
 
 ```
-POST /logout
+DELETE /session
 {
 	"checksum": "<checksum>" 
 }
@@ -59,5 +62,5 @@ POST /logout
 ### Checksum
 
 ```
-checksum = sha256( "/logout" . token )
+checksum = sha256( "/session" . token )
 ```

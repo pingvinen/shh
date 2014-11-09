@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-var config = require('./../config/config');
-var MongoConnection = require('./../lib/MongoConnection');
-var checksumService = require('./../lib/authentication/ChecksumService');
+var config = require('./../../config/config');
+var MongoConnection = require('./../../lib/MongoConnection');
+var checksumService = require('./../../lib/authentication/ChecksumService');
 
 
 module.exports = function(req, res) {
@@ -10,7 +10,7 @@ module.exports = function(req, res) {
 	var checksum = req.body.checksum || "***";
 	var session = req.session || {};
 
-	if (!checksumService.check(checksum, session.token, ["/logout"])) {
+	if (!checksumService.check(checksum, session.token, ["/session"])) {
 		res.json({
 			"error": {
 				  "code": "InvalidChecksum"
