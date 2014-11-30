@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 var uuid = require('node-uuid');
-var Blob = require('./Blob');
 
 /**
  * @param dbConnection MongoConnection
@@ -32,6 +31,7 @@ BlobService.prototype.insert = function(blob, callback) {
 			, body: blob.getBody()
 			, createdAt: now
 			, updatedAt: now
+			, owner: blob.getOwner()
 		};
 
 		connection.insert(db, 'blobs', blobDocument, function(result) {

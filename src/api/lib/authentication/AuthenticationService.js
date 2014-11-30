@@ -24,10 +24,9 @@ AuthenticationService.prototype.getHashedPassword = function(plaintext, salt) {
 AuthenticationService.prototype.authenticate = function(username, password, callback) {
 	var that = this;
 
-	this.userRepository.getByUsername(username, function(userList) {
-		if (userList.count() == 1) {
+	this.userRepository.getByUsername(username, function(user) {
+		if (user != null) {
 			var hashedPassword = that.getHashedPassword(password, username);
-			var user = userList.first();
 
 			if (hashedPassword === user.getPassword()) {
 				callback(true, user);

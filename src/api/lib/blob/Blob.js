@@ -9,6 +9,7 @@ function Blob() {
 	this.type = '';
 	this.createdAt = null;
 	this.updatedAt = null;
+	this.owner = '';
 }
 
 Blob.prototype.getId = function() {
@@ -59,12 +60,22 @@ Blob.prototype.setUpdatedAt = function(updatedAt) {
 	this.updatedAt = updatedAt;
 };
 
+Blob.prototype.getOwner = function() {
+	return this.owner;
+};
+
+Blob.prototype.setOwner = function(userId) {
+	this.owner = userId;
+};
+
+
 Blob.prototype.toJson = function() {
 	return {
 		  id: this.id
 		, title: this.title
 		, body: this.body
 		, type: this.type
+		, owner: this.owner
 		, createdAt: this.createdAt
 		, updatedAt: this.updatedAt
 	};

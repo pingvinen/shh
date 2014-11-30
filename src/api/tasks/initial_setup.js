@@ -41,3 +41,16 @@ connection.connect(function (db) {
 		db.close();
 	});
 });
+
+
+
+/**
+ * Remove session tokens
+ */
+connection.connect(function (db) {
+	connection.remove(db, 'sessionTokens', {}, function(db) {
+		console.log('removed all session tokens');
+
+		db.close();
+	});
+});

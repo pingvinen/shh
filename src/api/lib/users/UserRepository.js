@@ -15,15 +15,15 @@ function UserRepository(dbConnection) {
 }
 
 /**
- * @param username string
+ * @param searchDocument Object
  * @param callback Function(UserList)
  */
-UserRepository.prototype.getByUsername = function(username, callback) {
+UserRepository.prototype.get = function(searchDocument, callback) {
 	var connection = this.dbConnection;
 	var that = this;
 
 	connection.connect(function(db) {
-		connection.find(db, 'users', {username: username}, function(docs) {
+		connection.find(db, 'users', searchDocument, function(docs) {
 			var list = new UserList();
 
 			for (var i=0; i<docs.length; i++) {
@@ -32,6 +32,26 @@ UserRepository.prototype.getByUsername = function(username, callback) {
 
 			callback(list);
 		});
+	});
+};
+
+/**
+ * @param id string
+ * @param callback Function(User)
+ */
+UserRepository.prototype.getById = function(id, callback) {
+	this.get({_id: id}, function(userList) {
+		callback(userList.first());
+	});
+};
+
+/**
+ * @param username string
+ * @param callback Function(User)
+ */
+UserRepository.prototype.getByUsername = function(username, callback) {
+	this.get({username: username}, function(userList) {
+		callback(userList.first());
 	});
 };
 

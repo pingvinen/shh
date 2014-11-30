@@ -22,11 +22,12 @@ module.exports = function(req, res) {
 
 	var authService = new AuthenticationService(dbConnection);
 
-	authService.authenticate(username, password, function(wasSuccessful, userDoc) {
+	authService.authenticate(username, password, function(wasSuccessful, user) {
 		session.isAuthenticated = wasSuccessful;
 
 		if (wasSuccessful) {
 			session.token = authService.generateToken();
+			session.userId = user.getId();
 
 			// TODO figure out how to generate a new ID for the current session
 
@@ -34,10 +35,11 @@ module.exports = function(req, res) {
 				var tokenDoc = {
 					  token: session.token
 					, username: username
-					, userId: userDoc._id
+					, userId: user.getId()
 					, sessionId: session.id
 					, expiresAt: getExpiresAt()
 				};
+
 				dbConnection.insert(db, 'sessionTokens', tokenDoc, function () {
 					res.json({
 						  "sessionId": session.id

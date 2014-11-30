@@ -4,6 +4,7 @@ var MongoConnection = require('./../../lib/MongoConnection');
 var checksumService = require('./../../lib/authentication/ChecksumService');
 var BlobService = require('./../../lib/blob/BlobService');
 var Blob = require('./../../lib/blob/Blob');
+var UserRepository = require('./../../lib/users/UserRepository');
 
 module.exports = function(req, res) {
 	"use strict";
@@ -13,6 +14,16 @@ module.exports = function(req, res) {
 	var blobTitle = req.body.title || '';
 	var blobBody = req.body.body || '';
 	var blobType = req.body.type || 'plaintext';
+
+	if (!session.isAuthenticated) {
+		res.json({
+			"error": {
+				  "code": "NotAuthenticated"
+				, "message": "You must login"
+			}
+		});
+		return;
+	}
 
 	if (!checksumService.check(checksum, session.token, [blobTitle, blobBody, blobType])) {
 		res.json({
@@ -25,25 +36,38 @@ module.exports = function(req, res) {
 	}
 
 	var dbConnection = new MongoConnection(config);
-
 	var blobService = new BlobService(dbConnection);
+	var userRepository = new UserRepository(dbConnection);
 
-	var blob = new Blob();
-	blob.setBody(blobBody);
-	blob.setTitle(blobTitle);
-	blob.setType(blobType);
-
-	blobService.insert(blob, function(wasSuccessful, updatedBlob) {
-		if (wasSuccessful) {
+	userRepository.getById(session.userId, function(user) {
+		if (user == null) {
 			res.json({
-				"blob": updatedBlob.toJson()
+				"error": {
+					  "code": "NoSuchUser"
+					, "message": "Could not find the current user"
+				}
 			});
 		}
 		else {
-			res.json({
-				"error": {
-					  "code": "CouldNotCreateBlob"
-					, "message": "Could not create the blob"
+			var blob = new Blob();
+			blob.setBody(blobBody);
+			blob.setTitle(blobTitle);
+			blob.setType(blobType);
+			blob.setOwner(user.getId());
+
+			blobService.insert(blob, function(wasSuccessful, updatedBlob) {
+				if (wasSuccessful) {
+					res.json({
+						"blob": updatedBlob.toJson()
+					});
+				}
+				else {
+					res.json({
+						"error": {
+							"code": "CouldNotCreateBlob"
+							, "message": "Could not create the blob"
+						}
+					});
 				}
 			});
 		}
