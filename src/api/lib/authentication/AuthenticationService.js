@@ -2,16 +2,14 @@
 
 var uuid = require('node-uuid');
 var crypto = require('crypto');
+var UserRepository = require('./../users/UserRepository');
 
 /**
  * @param dbConnection MongoConnection
  * @constructor
  */
 function AuthenticationService(dbConnection) {
-	/**
-	 * @var MongoConnection
-	 */
-	this.dbConnection = dbConnection;
+	this.userRepository = new UserRepository(dbConnection);
 }
 
 AuthenticationService.prototype.getHashedPassword = function(plaintext, salt) {
@@ -24,25 +22,23 @@ AuthenticationService.prototype.getHashedPassword = function(plaintext, salt) {
 };
 
 AuthenticationService.prototype.authenticate = function(username, password, callback) {
-	var connection = this.dbConnection;
 	var that = this;
-	connection.connect(function(db) {
-		connection.find(db, 'users', {username: username}, function(docs) {
-			if (docs.length == 1) {
 
-				var hashedPassword = that.getHashedPassword(password, username);
+	this.userRepository.getByUsername(username, function(userList) {
+		if (userList.count() == 1) {
+			var hashedPassword = that.getHashedPassword(password, username);
+			var user = userList.first();
 
-				if (hashedPassword === docs[0].password) {
-					callback(true, docs[0]);
-				}
-				else {
-					callback(false, null);
-				}
+			if (hashedPassword === user.getPassword()) {
+				callback(true, user);
 			}
 			else {
 				callback(false, null);
 			}
-		});
+		}
+		else {
+			callback(false, null);
+		}
 	});
 };
 
