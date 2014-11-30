@@ -6,6 +6,7 @@ var connection = new MongoConnection(config);
 var uuidGen = require('node-uuid');
 var authService = new (require('./../lib/authentication/AuthenticationService'))(connection);
 
+
 /**
  * Setup initial user
  */
@@ -18,10 +19,12 @@ connection.connect(function (db) {
 
 	user.password = authService.getHashedPassword(user.password, user.username);
 
-	connection.insert(db, 'users', user, function(result) {
+	connection.remove(db, 'users', {}, function(db) {
+		connection.insert(db, 'users', user, function(result) {
 
-		console.log('all done with them users');
+			console.log('all done with them users');
 
-		db.close();
+			db.close();
+		});
 	});
 });
