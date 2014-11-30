@@ -28,3 +28,16 @@ connection.connect(function (db) {
 		});
 	});
 });
+
+
+
+/**
+ * Remove exisiting blobs
+ */
+connection.connect(function (db) {
+	connection.remove(db, 'blobs', {}, function(db) {
+		console.log('removed all blobs');
+
+		db.close();
+	});
+});
