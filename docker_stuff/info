@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+source bash_functions/docker_functions
+
+
+function printInfo {
+	local NAME=$1
+	local SEARCH=$2
+
+	CONTAINER_ID=$(docker_getContainerId $SEARCH)
+	IP=$(docker_getIp $CONTAINER_ID)
+
+	echo "$NAME"
+	echo "-------------------------------------"
+	echo "Container ID: $CONTAINER_ID"
+	echo "IP: $IP"
+}
+
+
+
+printInfo 'Mongo' 'shh-mongo'
+
+echo ""
+echo ""
+printInfo 'API' 'shh-api'

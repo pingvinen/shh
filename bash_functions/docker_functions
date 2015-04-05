@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+function docker_getContainerId {
+	docker ps -a | grep $1 | cut -d ' ' -f 1
+}
+
+function docker_getIp {
+	docker inspect --format '{{ .NetworkSettings.IPAddress }}' $1
+}

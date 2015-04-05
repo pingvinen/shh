@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+source bash_functions/docker_functions
+
+SEARCH='shh-'$1
+
+CONTAINER_ID=$(docker_getContainerId $SEARCH)
+
+docker kill $CONTAINER_ID
+docker rm $CONTAINER_ID

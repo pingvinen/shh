@@ -1,0 +1,11 @@
+{
+	"minimum-stability": "stable",
+
+	"require": {
+		"anneks/rightaboutnow": "1.*"
+	},
+
+	"require-dev": {
+		"slim/slim": "2.*"
+	}
+}

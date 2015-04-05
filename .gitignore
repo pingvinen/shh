@@ -1,4 +1,6 @@
 src/*/.idea/workspace.xml
 src/*/.idea/tasks.xml
 src/api/config/config.js
+src/phpapi/config/config.php
+src/*/vendor
 node_modules
